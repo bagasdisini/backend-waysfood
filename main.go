@@ -11,10 +11,8 @@ import (
 )
 
 func main() {
-	// initial DB
 	mysql.DatabaseInit()
 
-	// run migration
 	database.RunMigration()
 
 	r := mux.NewRouter()
