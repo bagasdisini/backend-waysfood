@@ -1,9 +1,9 @@
 package main
 
 import (
-	"dumbmerch/database"
-	"dumbmerch/pkg/mysql"
-	"dumbmerch/routes"
+	"backend/database"
+	"backend/pkg/mysql"
+	"backend/routes"
 	"fmt"
 	"net/http"
 
@@ -17,8 +17,8 @@ func main() {
 
 	r := mux.NewRouter()
 
-	routes.RouteInit(r.PathPrefix("/").Subrouter())
+	routes.RouteInit(r)
 
-	fmt.Println("server running localhost:5000")
+	fmt.Println("Running in localhost:5000")
 	http.ListenAndServe("localhost:5000", r)
 }

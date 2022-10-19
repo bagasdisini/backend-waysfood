@@ -1,9 +1,9 @@
 package routes
 
 import (
-	"dumbmerch/handlers"
-	"dumbmerch/pkg/mysql"
-	"dumbmerch/repositories"
+	"backend/handlers"
+	"backend/pkg/mysql"
+	"backend/repositories"
 
 	"github.com/gorilla/mux"
 )

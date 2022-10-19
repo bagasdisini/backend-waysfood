@@ -1,18 +1,18 @@
 package database
 
 import (
-	"dumbmerch/models"
-	"dumbmerch/pkg/mysql"
+	"backend/models"
+	"backend/pkg/mysql"
 	"fmt"
 )
 
 func RunMigration() {
-	err := mysql.DB.AutoMigrate(&models.Category{}, &models.User{}, &models.Profile{}, &models.Product{}, &models.Transaction{})
+	err := mysql.DB.AutoMigrate(&models.Category{}, &models.User{}, &models.Product{}, &models.Transaction{})
 
 	if err != nil {
 		fmt.Println(err)
-		panic("Migration Failed")
+		panic("Migration Failed!")
 	}
 
-	fmt.Println("Migration Success")
+	fmt.Println("Migration Successful!")
 }

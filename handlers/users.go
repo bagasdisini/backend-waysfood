@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	dto "dumbmerch/dto/result"
-	usersdto "dumbmerch/dto/users"
-	"dumbmerch/models"
-	"dumbmerch/repositories"
+	dto "backend/dto/result"
+	usersdto "backend/dto/users"
+	"backend/models"
+	"backend/repositories"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -32,7 +32,7 @@ func (h *handler) FindUsers(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: users}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: users}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -44,20 +44,20 @@ func (h *handler) GetUser(w http.ResponseWriter, r *http.Request) {
 	user, err := h.UserRepository.GetUser(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	if user.ID == 0 {
 		w.WriteHeader(http.StatusNotFound)
-		response := dto.ErrorResult{Code: http.StatusNotFound, Message: "id: " + strconv.Itoa(id) + " not found"}
+		response := dto.ErrorResult{Status: http.StatusNotFound, Message: "id: " + strconv.Itoa(id) + " not found"}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(user)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponse(user)}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -67,7 +67,7 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	request := new(usersdto.CreateUserRequest)
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -76,13 +76,13 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	err := validation.Struct(request)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	user := models.User{
-		Name:     request.Name,
+		FullName: request.FullName,
 		Email:    request.Email,
 		Password: request.Password,
 	}
@@ -96,7 +96,7 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(data)
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -106,7 +106,7 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	request := new(usersdto.UpdateUserRequest)
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -117,8 +117,8 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	user.ID = id
 
-	if request.Name != "" {
-		user.Name = request.Name
+	if request.FullName != "" {
+		user.FullName = request.FullName
 	}
 
 	if request.Email != "" {
@@ -132,13 +132,13 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	data, err := h.UserRepository.UpdateUser(user, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -150,7 +150,7 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	user, err := h.UserRepository.GetUser(id)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Code: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
@@ -158,20 +158,20 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	data, err := h.UserRepository.DeleteUser(user, id)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Code: http.StatusInternalServerError, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Code: http.StatusOK, Data: convertResponse(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)}
 	json.NewEncoder(w).Encode(response)
 }
 
 func convertResponse(u models.User) usersdto.UserResponse {
 	return usersdto.UserResponse{
 		ID:       u.ID,
-		Name:     u.Name,
+		FullName: u.FullName,
 		Email:    u.Email,
 		Password: u.Password,
 	}

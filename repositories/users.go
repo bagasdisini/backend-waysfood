@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"dumbmerch/models"
+	"backend/models"
 
 	"gorm.io/gorm"
 )
