@@ -10,7 +10,7 @@ import (
 )
 
 type Result struct {
-	Code    int         `json:"code"`
+	Status  int         `json:"status"`
 	Data    interface{} `json:"data"`
 	Message string      `json:"message"`
 }
@@ -33,7 +33,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 
 		if err != nil {
 			w.WriteHeader(http.StatusUnauthorized)
-			response := Result{Code: http.StatusUnauthorized, Message: "unauthorized"}
+			response := Result{Status: http.StatusUnauthorized, Message: "unauthorized"}
 			json.NewEncoder(w).Encode(response)
 			return
 		}

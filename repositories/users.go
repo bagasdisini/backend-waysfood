@@ -7,8 +7,8 @@ import (
 )
 
 type UserRepository interface {
-	FindUsers() ([]models.User, error)
-	GetUser(ID int) (models.User, error)
+	ShowUsers() ([]models.User, error)
+	GetUserByID(ID int) (models.User, error)
 	CreateUser(user models.User) (models.User, error)
 	UpdateUser(user models.User, ID int) (models.User, error)
 	DeleteUser(user models.User, ID int) (models.User, error)
@@ -18,14 +18,14 @@ func RepositoryUser(db *gorm.DB) *repository {
 	return &repository{db}
 }
 
-func (r *repository) FindUsers() ([]models.User, error) {
+func (r *repository) ShowUsers() ([]models.User, error) {
 	var users []models.User
 	err := r.db.Find(&users).Error
 
 	return users, err
 }
 
-func (r *repository) GetUser(ID int) (models.User, error) {
+func (r *repository) GetUserByID(ID int) (models.User, error) {
 	var user models.User
 	err := r.db.First(&user, ID).Error
 

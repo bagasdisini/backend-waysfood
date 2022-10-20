@@ -2,9 +2,9 @@ package models
 
 type User struct {
 	ID       int    `json:"id"`
-	FullName string `json:"fullName"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
+	FullName string `json:"fullName"`
 	Phone    string `json:"phone"`
 	Location string `json:"location"`
 	Image    string `json:"image"`
@@ -13,8 +13,10 @@ type User struct {
 }
 
 type UsersProfileResponse struct {
-	ID   int    `json:"id"`
-	Name string `json:"name"`
+	ID       int    `json:"id"`
+	FullName string `json:"fullName"`
+	Location string `json:"location"`
+	Email    string `json:"email"`
 }
 
 func (UsersProfileResponse) TableName() string {

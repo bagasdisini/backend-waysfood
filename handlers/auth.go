@@ -54,23 +54,27 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user := models.User{
-		FullName: request.FullName,
 		Email:    request.Email,
 		Password: password,
-		Phone:    request.Phone,
+		FullName: request.FullName,
 		Gender:   request.Gender,
+		Phone:    request.Phone,
 		Role:     request.Role,
+		Location: request.Location,
 	}
 
-	data, err := h.AuthRepository.Register(user)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		response := dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
+	AuthResponse := usersdto.UserResponse{
+		Email:    user.Email,
+		Password: user.Password,
+		FullName: user.FullName,
+		Gender:   user.Gender,
+		Phone:    user.Phone,
+		Role:     user.Role,
+		Location: user.Location,
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponse(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: AuthResponse}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -90,38 +94,35 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 		Password: request.Password,
 	}
 
-	// Check email
 	user, err := h.AuthRepository.Login(user.Email)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: "Email not registered!"}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	// Check password
 	isValid := bcrypt.CheckPasswordHash(request.Password, user.Password)
 	if !isValid {
 		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: "wrong email or password"}
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: "Wrong password!"}
 		json.NewEncoder(w).Encode(response)
 		return
 	}
 
-	//generate token
-	claims := jwt.MapClaims{}
-	claims["id"] = user.ID
-	claims["exp"] = time.Now().Add(time.Hour * 2).Unix() // 2 hours expired
+	gnrtToken := jwt.MapClaims{}
+	gnrtToken["id"] = user.ID
+	gnrtToken["exp"] = time.Now().Add(time.Hour * 3).Unix()
 
-	token, errGenerateToken := jwtToken.GenerateToken(&claims)
-	if errGenerateToken != nil {
-		log.Println(errGenerateToken)
+	token, err := jwtToken.GenerateToken(&gnrtToken)
+	if err != nil {
+		log.Println(err)
 		fmt.Println("Unauthorize")
 		return
 	}
 
 	AuthResponse := authdto.AuthResponse{
-		Name:     user.FullName,
+		FullName: user.FullName,
 		Email:    user.Email,
 		Password: user.Password,
 		Token:    token,

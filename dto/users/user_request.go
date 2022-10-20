@@ -1,19 +1,23 @@
 package usersdto
 
 type CreateUserRequest struct {
-	FullName string `json:"fullName" form:"name" validate:"required"`
-	Email    string `json:"email" form:"email" validate:"required"`
-	Password string `json:"password" form:"password" validate:"required"`
-	Gender   string `json:"gender" form:"gender" validate:"required"`
-	Phone    string `json:"phone" form:"phone" validate:"required"`
-	Role     string `json:"role" form:"role" validate:"required"`
+	Email    string `json:"email" form:"email" gorm:"type: varchar(255)" validate:"required"`
+	Password string `json:"password" form:"password" gorm:"type: varchar(255)" validate:"required"`
+	FullName string `json:"fullName" form:"name" gorm:"type: varchar(255)" validate:"required"`
+	Gender   string `json:"gender" form:"gender" gorm:"type: varchar(255)" validate:"required"`
+	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)" validate:"required"`
+	Role     string `json:"role" form:"role" gorm:"type: varchar(255)" validate:"required"`
+	Location string `json:"location" form:"location" gorm:"type: varchar(255)" validate:"required"`
+	Image    string `json:"image" form:"image" gorm:"type: varchar(255)"`
 }
 
 type UpdateUserRequest struct {
-	FullName string `json:"fullName" form:"name"`
-	Email    string `json:"email" form:"email"`
-	Password string `json:"password" form:"password"`
-	Gender   string `json:"gender" form:"gender"`
-	Phone    string `json:"phone" form:"phone"`
-	Role     string `json:"role" form:"role"`
+	Email    string `json:"email" form:"email" gorm:"type: varchar(255)"`
+	Password string `json:"password" form:"password" gorm:"type: varchar(255)"`
+	FullName string `json:"fullName" form:"name" gorm:"type: varchar(255)"`
+	Gender   string `json:"gender" form:"gender" gorm:"type: varchar(255)"`
+	Phone    string `json:"phone" form:"phone" gorm:"type: varchar(255)"`
+	Location string `json:"location" form:"location" gorm:"type: varchar(255)"`
+	Role     string `json:"role" form:"role" gorm:"type: varchar(255)"`
+	Image    string `json:"image" form:"image" gorm:"type: varchar(255)"`
 }
