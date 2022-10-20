@@ -85,6 +85,9 @@ func (h *handler) CreateUser(w http.ResponseWriter, r *http.Request) {
 		FullName: request.FullName,
 		Email:    request.Email,
 		Password: request.Password,
+		Gender:   request.Gender,
+		Phone:    request.Phone,
+		Role:     request.Role,
 	}
 
 	data, err := h.UserRepository.CreateUser(user)
@@ -173,6 +176,9 @@ func convertResponse(u models.User) usersdto.UserResponse {
 		ID:       u.ID,
 		FullName: u.FullName,
 		Email:    u.Email,
-		Password: u.Password,
+		Phone:    u.Phone,
+		Location: u.Location,
+		Image:    u.Image,
+		Role:     u.Role,
 	}
 }

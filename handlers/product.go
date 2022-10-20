@@ -59,7 +59,7 @@ func (h *handlerProduct) GetProduct(w http.ResponseWriter, r *http.Request) {
 func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	request := new(productdto.ProductRequest)
+	request := new(productdto.CreateProductRequest)
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
