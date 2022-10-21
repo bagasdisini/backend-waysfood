@@ -4,6 +4,7 @@ import (
 	dto "backend/dto/result"
 	usersdto "backend/dto/users"
 	"backend/models"
+	"backend/pkg/bcrypt"
 	"backend/repositories"
 	"encoding/json"
 	"net/http"
@@ -95,7 +96,29 @@ func (h *handler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if request.Password != "" {
-		user.Password = request.Password
+		password, err := bcrypt.HashingPassword(request.Password)
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			response := dto.ErrorResult{Status: http.StatusInternalServerError, Message: err.Error()}
+			json.NewEncoder(w).Encode(response)
+		}
+		user.Password = password
+	}
+
+	if request.Phone != "" {
+		user.Phone = request.Phone
+	}
+
+	if request.Location != "" {
+		user.Location = request.Location
+	}
+
+	if request.Image != "" {
+		user.Image = request.Image
+	}
+
+	if request.Gender != "" {
+		user.Gender = request.Gender
 	}
 
 	data, err := h.UserRepository.UpdateUser(user, id)
@@ -139,6 +162,14 @@ func (h *handler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 
 func convertResponse(u models.User) usersdto.UserResponse {
 	return usersdto.UserResponse{
-		ID: u.ID,
+		ID:       u.ID,
+		Email:    u.Email,
+		Password: u.Password,
+		FullName: u.FullName,
+		Gender:   u.Gender,
+		Phone:    u.Phone,
+		Location: u.Location,
+		Role:     u.Role,
+		Image:    u.Image,
 	}
 }

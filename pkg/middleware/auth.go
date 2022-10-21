@@ -23,7 +23,7 @@ func Auth(next http.HandlerFunc) http.HandlerFunc {
 
 		if token == "" {
 			w.WriteHeader(http.StatusUnauthorized)
-			response := dto.ErrorResult{Status: http.StatusBadRequest, Message: "unauthorized"}
+			response := dto.ErrorResult{Status: http.StatusUnauthorized, Message: "unauthorized"}
 			json.NewEncoder(w).Encode(response)
 			return
 		}

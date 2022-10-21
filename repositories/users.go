@@ -39,7 +39,7 @@ func (r *repository) CreateUser(user models.User) (models.User, error) {
 }
 
 func (r *repository) UpdateUser(user models.User, ID int) (models.User, error) {
-	err := r.db.Save(&user).Error
+	err := r.db.Model(&user).Where("id=?", ID).Updates(&user).Error
 
 	return user, err
 }

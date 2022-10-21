@@ -60,7 +60,7 @@ func (h *handlerProduct) GetProductByID(w http.ResponseWriter, r *http.Request) 
 	product.Image = os.Getenv("PATH_FILE") + product.Image
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponseProduct(product)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: product}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -73,12 +73,13 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	dataUpload := r.Context().Value("dataFile")
 	filename := dataUpload.(string)
 
-	request := new(productdto.CreateProductRequest)
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
+	price, _ := strconv.Atoi(r.FormValue("price"))
+	qty, _ := strconv.Atoi(r.FormValue("qty"))
+
+	request := productdto.CreateProductRequest{
+		Title: r.FormValue("title"),
+		Price: price,
+		Qty:   qty,
 	}
 
 	validation := validator.New()
@@ -155,7 +156,7 @@ func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponseProduct(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: data}
 	json.NewEncoder(w).Encode(response)
 }
 
@@ -181,12 +182,6 @@ func (h *handlerProduct) DeleteProduct(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: convertResponseProduct(data)}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: data}
 	json.NewEncoder(w).Encode(response)
-}
-
-func convertResponseProduct(u models.Product) models.ProductResponse {
-	return models.ProductResponse{
-		ID: u.ID,
-	}
 }
