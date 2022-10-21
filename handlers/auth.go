@@ -60,21 +60,12 @@ func (h *handlerAuth) Register(w http.ResponseWriter, r *http.Request) {
 		Gender:   request.Gender,
 		Phone:    request.Phone,
 		Role:     request.Role,
-		Location: request.Location,
 	}
 
-	AuthResponse := usersdto.UserResponse{
-		Email:    user.Email,
-		Password: user.Password,
-		FullName: user.FullName,
-		Gender:   user.Gender,
-		Phone:    user.Phone,
-		Role:     user.Role,
-		Location: user.Location,
-	}
+	data, _ := h.AuthRepository.Register(user)
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: AuthResponse}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: data}
 	json.NewEncoder(w).Encode(response)
 }
 

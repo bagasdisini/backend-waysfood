@@ -70,8 +70,8 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 	userInfo := r.Context().Value("userInfo").(jwt.MapClaims)
 	userId := int(userInfo["id"].(float64))
 
-	dataContex := r.Context().Value("dataFile")
-	filename := dataContex.(string)
+	dataUpload := r.Context().Value("dataFile")
+	filename := dataUpload.(string)
 
 	request := new(productdto.CreateProductRequest)
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {

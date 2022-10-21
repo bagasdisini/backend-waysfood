@@ -12,7 +12,7 @@ var DB *gorm.DB
 func DatabaseInit() {
 	var err error
 
-	connect := "root:@tcp(localhost:3306)/db?charset=utf8mb4&parseTime=True&loc=Local"
+	connect := "root:@tcp(127.0.0.1:3306)/db?charset=utf8mb4&parseTime=True&loc=Local"
 	DB, err = gorm.Open(mysql.Open(connect), &gorm.Config{})
 
 	if err != nil {
