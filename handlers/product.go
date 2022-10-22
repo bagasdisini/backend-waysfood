@@ -7,7 +7,6 @@ import (
 	"backend/repositories"
 	"encoding/json"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/go-playground/validator/v10"
@@ -35,7 +34,7 @@ func (h *handlerProduct) ShowProducts(w http.ResponseWriter, r *http.Request) {
 	}
 
 	for i, p := range products {
-		products[i].Image = os.Getenv("PATH_FILE") + p.Image
+		products[i].Image = "http://localhost:5000/uploads/" + p.Image
 	}
 
 	w.WriteHeader(http.StatusOK)
@@ -57,7 +56,7 @@ func (h *handlerProduct) GetProductByID(w http.ResponseWriter, r *http.Request) 
 		return
 	}
 
-	product.Image = os.Getenv("PATH_FILE") + product.Image
+	product.Image = "http://localhost:5000/uploads/" + product.Image
 
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: http.StatusOK, Data: product}

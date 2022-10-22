@@ -30,6 +30,10 @@ func (h *handler) ShowUsers(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(err.Error())
 	}
 
+	for i, p := range users {
+		users[i].Image = "http://localhost:5000/uploads/" + p.Image
+	}
+
 	w.WriteHeader(http.StatusOK)
 	response := dto.SuccessResult{Status: http.StatusOK, Data: users}
 	json.NewEncoder(w).Encode(response)
@@ -55,18 +59,10 @@ func (h *handler) GetUserByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	UserResponse := usersdto.UserResponse{
-		ID:       user.ID,
-		FullName: user.FullName,
-		Email:    user.Email,
-		Phone:    user.Phone,
-		Location: user.Location,
-		Image:    user.Image,
-		Role:     user.Role,
-	}
+	user.Image = "http://localhost:5000/uploads/" + user.Image
 
 	w.WriteHeader(http.StatusOK)
-	response := dto.SuccessResult{Status: http.StatusOK, Data: UserResponse}
+	response := dto.SuccessResult{Status: http.StatusOK, Data: user}
 	json.NewEncoder(w).Encode(response)
 }
 
