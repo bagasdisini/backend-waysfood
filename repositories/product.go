@@ -39,12 +39,13 @@ func (r *repository) CreateProduct(product models.Product) (models.Product, erro
 }
 
 func (r *repository) UpdateProduct(Product models.Product, ID int) (models.Product, error) {
-	err := r.db.Save(&Product).Error
+	err := r.db.Model(&Product).Where("id=?", ID).Updates(&Product).Error
 
 	return Product, err
 }
 
 func (r *repository) DeleteProduct(Product models.Product, ID int) (models.Product, error) {
+	// err := r.db.Exec("SET FOREIGN_KEY_CHECKS=0").Raw("DELETE from Product where id = ?",).Error
 	err := r.db.Delete(&Product).Error
 
 	return Product, err

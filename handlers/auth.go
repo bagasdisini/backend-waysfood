@@ -122,5 +122,4 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	response := dto.SuccessResult{Status: http.StatusOK, Data: AuthResponse}
 	json.NewEncoder(w).Encode(response)
-
 }

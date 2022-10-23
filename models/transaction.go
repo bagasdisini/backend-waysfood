@@ -6,6 +6,6 @@ type Transaction struct {
 	UsersID   int                  `json:"user_id"`
 	Users     UsersProfileResponse `json:"users"`
 	Status    string               `json:"status"`
-	ProductID int                  `json:"product_id" gorm:"type: int"`
+	ProductID int                  `json:"products_id" `
 	Product   ProductResponse      `json:"product"`
 }

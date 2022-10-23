@@ -116,15 +116,18 @@ func (h *handlerProduct) CreateProduct(w http.ResponseWriter, r *http.Request) {
 func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	request := new(productdto.UpdateProductRequest)
-	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
-		json.NewEncoder(w).Encode(response)
-		return
-	}
+	dataUpload := r.Context().Value("dataFile")
+	filename := dataUpload.(string)
 
 	id, _ := strconv.Atoi(mux.Vars(r)["id"])
+	price, _ := strconv.Atoi(r.FormValue("price"))
+	qty, _ := strconv.Atoi(r.FormValue("qty"))
+
+	request := productdto.UpdateProductRequest{
+		Title: r.FormValue("title"),
+		Price: price,
+		Qty:   qty,
+	}
 
 	product := models.Product{}
 
@@ -138,8 +141,8 @@ func (h *handlerProduct) UpdateProduct(w http.ResponseWriter, r *http.Request) {
 		product.Price = request.Price
 	}
 
-	if request.Image != "" {
-		product.Image = request.Image
+	if filename != "" {
+		product.Image = filename
 	}
 
 	if request.Qty != 0 {
