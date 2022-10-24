@@ -10,7 +10,6 @@ import (
 	"backend/repositories"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 
@@ -107,7 +106,6 @@ func (h *handlerAuth) Login(w http.ResponseWriter, r *http.Request) {
 
 	token, err := jwtToken.GenerateToken(&gnrtToken)
 	if err != nil {
-		log.Println(err)
 		fmt.Println("Unauthorize")
 		return
 	}
