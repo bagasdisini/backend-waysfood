@@ -105,19 +105,17 @@ func (h *handlerTransaction) CreateTransaction(w http.ResponseWriter, r *http.Re
 func (h *handlerTransaction) UpdateTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
-	id, _ := strconv.Atoi(mux.Vars(r)["id"])
-	productid, _ := strconv.Atoi(r.FormValue("product_id"))
-	qty, _ := strconv.Atoi(r.FormValue("qty"))
-
-	request := transactiondto.UpdateTransactionRequest{
-		Status:    r.FormValue("status"),
-		ProductID: productid,
-		Qty:       qty,
+	request := new(transactiondto.UpdateTransactionRequest)
+	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		response := dto.ErrorResult{Status: http.StatusBadRequest, Message: err.Error()}
+		json.NewEncoder(w).Encode(response)
+		return
 	}
 
 	transaction := models.Transaction{}
 
-	transaction.ID = id
+	id, _ := strconv.Atoi(mux.Vars(r)["id"])
 
 	if request.Status != "" {
 		transaction.Status = request.Status
